@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Users</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/brands.min.css">
+    <!-- <link rel="stylesheet" href="../css/shards.min.css"> -->
+    
+    <style>
+    #mybtn{margin-top: -38px;
+    margin-left: 256px;
+    position: absolute;
+    box-sizing: border-box;}
+    </style>
+</head>
+
+
+<body>
+    <div class="container my-2">
+        <div class="card">
+            <div class="card-body">
+                <div th:switch="${employeeList}" class="container my-5">
+                    <p class="my-5">
+                        <input type="text" class="form-control col-lg-3 col-md-3"  id ="myInput"/><button id="mybtn" class="btn btn-primary"><i class="fas fa-search-location"></i></button>
+                    </p>
+                    <div class="col-md-10"> 
+                        <h2 th:case="null">No Students yet!</h2>
+                        <div th:case="*">
+                            <table class="table table-striped table-responsive-md" id="myTable">
+                                <thead>
+                                    <tr>
+                                    	<th>Id</th>
+                                        <th>Name</th>
+                                        <th>Email</th>
+                                        <th>Phone No</th>
+                                         <p></p>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="emp : ${employeeList}">
+                                      <td th:text="${emp.id}"></td>
+                                        <td th:text="${emp.name}"></td>
+                                        <td th:text="${emp.email}"></td>
+                                        <td th:text="${emp.phoneNo}"></td>
+                                       
+                                    </tr>
+                                </tbody>
+                            </table>
+                            
+                            <nav aria-label="Page navigation example">
+  							<ul class="pagination">
+   							 <li th:if="${currentpage != 0}" class="page-item"><a class="page-link" href="#" th:href="@{'/getData/'+${currentpage-1}}">Previous</a></li>
+    <li class="page-item" th:classappend="${currentpage==i-1?'active':''}" th:each= "i: ${#numbers.sequence(1,totalPage)}"><a class="page-link" href="#" th:href="@{'/getData/'+${i-1}}"><span th:text="${i}"></span></a></li>
+    
+    <li th:if="${currentpage+1 !=totalPage}" class="page-item"><a class="page-link" href="#" th:href="@{'/getData/'+${currentpage+1}}">Next</a></li>
+  </ul>
+</nav>
+                            
+                          
+                    </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+   
+  <script type="text/javascript">  
+        $(document).ready(function () {  
+            $('#myTable').DataTable({  
+                "ajax": {  
+                    "url": "//getData/0",  
+                    "type": "GET",  
+                    "datatype": "json"  
+                },  
+                "columns": [  
+                    { "data": "Id" },  
+                    { "data": "Name" },  
+                    { "data": "Email" },  
+                    { "data": "Phone No" }  
+                   
+                ]  
+            });  
+        });           
+    </script>    
+    
+
+<script type="text/javascript" >
+$(document).ready(function(){
+  $("#myInput").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#myTable tr").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+});
+</script>
+   
+</body>
+
+</html>
+
+
